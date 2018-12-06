@@ -2,6 +2,7 @@ package http
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"io"
 	"net"
@@ -40,6 +41,9 @@ func NewDownloader(downLimit int64, progress aptly.Progress) aptly.Downloader {
 	transport.TLSHandshakeTimeout = http.DefaultTransport.(*http.Transport).TLSHandshakeTimeout
 	transport.ExpectContinueTimeout = http.DefaultTransport.(*http.Transport).ExpectContinueTimeout
 	transport.DisableCompression = true
+	transport.TLSClientConfig = &tls.Config{
+		InsecureSkipVerify: true,
+	}
 	initTransport(&transport)
 	transport.RegisterProtocol("ftp", &protocol.FTPRoundTripper{})
 
